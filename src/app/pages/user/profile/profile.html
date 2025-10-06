@@ -1,0 +1,60 @@
+<app-navbar></app-navbar>
+
+<div
+    style="position: relative; width: 905px; height: 680px; background: #FEF7FF; border: 8px solid #CAC4D0; border-radius: 18px; margin: 20px auto; font-family: 'Inter', sans-serif;">
+
+    <!-- Banner -->
+    <div
+        style="position: absolute; width: 830px; height: 184px; left: 43px; top: 81px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); border-radius: 64px;">
+    </div>
+
+    <!-- Profile Image -->
+    <div style="position: absolute; width: 190px; height: 136px; left: 88px; top: 105px; border-radius: 25px;">
+        <img [src]="user?.imageUser || 'assets/default-avatar.png'" alt="Profile Image"
+            style="width:100%; height:100%; border-radius:25px;">
+    </div>
+
+    <!-- Name and Email -->
+    <div
+        style="position: absolute; width: 200px; height: 48px; left: 297px; top: 105px; font-weight: 700; font-size: 40px; line-height: 48px; color: #000;">
+        {{ user?.full_name || 'No Name' }}
+    </div>
+    <div
+        style="position: absolute; width: 191px; height: 19px; left: 298px; top: 163px; font-weight: 700; font-size: 16px; line-height: 19px; color: #000;">
+        {{ user?.email || 'No Email' }}
+    </div>
+
+
+    <!-- Edit Button -->
+    <a [routerLink]="['/editprofile', user?.uid]">
+        <div
+            style="position: absolute; width: 114px; height: 39px; left: 745px; top: 153px; background: #114D78; border: 1px solid #1A9FFF; border-radius: 10px; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); display: flex; justify-content: center; align-items: center; color: #FFF; font-weight: 700; font-size: 13px;">
+
+            <span>Edit</span>
+        </div>
+    </a>
+
+    <!-- Game Library Title -->
+    <div
+        style="position: absolute; width: 123px; height: 28px; left: 72px; top: 287px; font-weight: 400; font-size: 22px; line-height: 28px; color: #000; display: flex; align-items: center;">
+        Game Library
+    </div>
+
+    <!-- Game Cards -->
+    <div
+        style="box-sizing: border-box; position: absolute; width: 148px; height: 143px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); left: 72px; top: 327px;">
+    </div>
+    <div
+        style="box-sizing: border-box; position: absolute; width: 148px; height: 143px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); left: 233px; top: 327px;">
+    </div>
+    <div
+        style="box-sizing: border-box; position: absolute; width: 148px; height: 143px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); left: 394px; top: 327px;">
+    </div>
+    <div
+        style="box-sizing: border-box; position: absolute; width: 148px; height: 143px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); left: 555px; top: 326px;">
+    </div>
+    <div
+        style="box-sizing: border-box; position: absolute; width: 148px; height: 143px; background: #1A9FFF; border: 1px solid #1A9FFF; box-shadow: 0px 4px 4px rgba(0,0,0,0.25); left: 716px; top: 327px;">
+    </div>
+
+</div>

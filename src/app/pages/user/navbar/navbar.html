@@ -1,0 +1,42 @@
+<nav class="navbar">
+    <div class="nav-left">
+        <a [routerLink]="['/userhome', me?.uid]"><span class="nav-item">Shop</span></a>
+        <span class="nav-item">Ranking</span>
+
+        <div class="nav-dropdown">
+            <span class="nav-item">Type ▾</span>
+            <div class="dropdown-content">
+                <a href="#">Action</a>
+                <a href="#">RPG</a>
+                <a href="#">Strategy</a>
+                <a href="#">Simulation</a>
+                <a href="#">Puzzle</a>
+                <a href="#">Sports</a>
+                <a href="#">Horror</a>
+                <a href="#">Survival</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-center">
+        <input type="text" placeholder="search" />
+    </div>
+
+    <div class="nav-right">
+        <!-- ไอคอนตะกร้า -->
+        <span class="nav-icon">🛒</span>
+
+        <!-- เมนูสามขีด -->
+        <div class="nav-dropdown">
+            <span class="nav-icon menu-icon">☰</span>
+            <div class="dropdown-content right">
+                <!-- ส่ง uid ผ่าน path parameter -->
+                <a [routerLink]="['/profile', me?.uid]">Profile</a>
+                <a href="#">My Wallet</a>
+                <a href="#">Library</a>
+                <!-- เปลี่ยนจาก <a href="/">Logout</a> -->
+                <a href="#" (click)="logout()">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
