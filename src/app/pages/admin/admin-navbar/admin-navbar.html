@@ -1,0 +1,11 @@
+<nav class="admin-navbar">
+    <div class="navbar-left">
+        <a [routerLink]="['/adminhome', me?.uid]" class="nav-item">Game</a>
+        <a [routerLink]="['/Admincode', me?.uid]" class="nav-item">Code</a>
+        <a class="nav-item" routerLink="/admin/history">User history</a>
+    </div>
+
+    <div class="navbar-right">
+        <a class="nav-item logout" (click)="logout()">Logout</a>
+    </div>
+</nav>

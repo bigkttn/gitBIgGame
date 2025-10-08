@@ -1,0 +1,60 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div class="page-container">
+    <div *ngIf="newGame" class="form-container">
+        <h2>Add New Game</h2>
+
+        <form (ngSubmit)="onAddNewGame()">
+            <div class="form-content">
+                <div class="column">
+                    <div class="form-group">
+                        <label for="gameTitle">Game Title</label>
+                        <input id="gameTitle" type="text" [(ngModel)]="newGame.title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameType">Type</label>
+                        <input id="gameType" type="text" [(ngModel)]="newGame.type" name="type">
+                    </div>
+                    <div class="form-group">
+                        <label for="gamePrice">Price ($)</label>
+                        <input id="gamePrice" type="number" [(ngModel)]="newGame.price" name="price" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="releaseDate">Release Date</label>
+                        <input id="releaseDate" type="date" [(ngModel)]="newGame.releaseDate" name="releaseDate">
+                    </div>
+                </div>
+
+                <div class="column">
+
+                    <div class="form-group">
+                        <label>Game Image</label>
+
+                        <input type="file" id="imageUpload" (change)="onFileSelected($event)"
+                            accept="image/png, image/jpeg, image/webp">
+
+                        <label for="imageUpload" class="image-upload-label">
+                            <div class="image-preview-wrapper">
+                                <div class="image-preview" [style.background-image]="'url(' + imagePreviewUrl + ')'">
+                                    <span *ngIf="!imagePreviewUrl" class="upload-prompt">
+                                        Click here to upload an image
+                                    </span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" rows="5" [(ngModel)]="newGame.description"
+                            name="description"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+                <button type="submit" class="btn btn-save">Add Game</button>
+            </div>
+        </form>
+    </div>
+</div>

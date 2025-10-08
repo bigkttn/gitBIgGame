@@ -1,0 +1,113 @@
+/* Inner box */
+.main-box {
+  width: 100%;
+  min-height: 600px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Add Game Button */
+.add-game-btn {
+  width: 150px;
+  height: 40px;
+  background: #007BFF;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 40px; /* ✅ ขยับลงจาก navbar */
+  margin-bottom: 20px;
+  margin-left: 40px; /* ✅ ขยับไปทางขวา */
+}
+
+.add-game-btn:hover {
+  background: #005fcc;
+  transform: translateY(-2px);
+}
+
+/* Game List */
+#gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Game Row */
+.game-row {
+  background: #F9F9F9;
+  border: 1px solid #E5E5E5;
+  border-radius: 10px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.2s;
+}
+
+.game-row:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Game Info */
+.game-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.game-info img {
+  border-radius: 10px;
+  width: 60px;
+  height: 76px;
+  object-fit: cover;
+}
+
+.game-text {
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+}
+
+.game-text.muted {
+  font-weight: 400;
+  color: #777;
+  font-size: 13px;
+}
+
+.price {
+  margin-left: 20px;
+  font-weight: 700;
+  color: #007BFF;
+}
+
+/* Actions */
+.game-actions span {
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: color 0.2s;
+}
+
+.edit {
+  color: #007BFF;
+}
+
+.edit:hover {
+  color: #005fcc;
+}
+
+.delete {
+  color: #E62A2A;
+}
+
+.delete:hover {
+  color: #C00000;
+}

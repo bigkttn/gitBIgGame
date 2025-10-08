@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../envirolments/environment';
 import { LoginResponse } from '../models/user.model';
 import { firstValueFrom } from 'rxjs';
+import { Getgame } from '../models/getgame';
 
 
 export interface LoginDto { email: string; password: string; }
@@ -115,6 +116,20 @@ export class AuthService {
     } catch (err) {
       console.error('Cannot get user by uid', err);
       return null;
+    }
+  }
+  async getGames(): Promise<Getgame[]> {
+    try {
+      // เรียก GET request ไปยัง endpoint /games และคาดหวังผลลัพธ์เป็น Array ของ Game
+      const res = await firstValueFrom(
+        this.http.get<Getgame[]>(`${environment.apiBase}/games`)
+      );
+      // หากสำเร็จ ให้ return ข้อมูลเกมที่ได้
+      return res;
+    } catch (err) {
+      // หากเกิดข้อผิดพลาด ให้แสดง log และ return เป็น array ว่าง
+      console.error('Cannot get games', err);
+      return [];
     }
   }
 }

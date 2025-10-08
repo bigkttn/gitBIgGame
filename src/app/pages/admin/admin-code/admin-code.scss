@@ -1,0 +1,135 @@
+
+/* ครอบทุกอย่างไว้ตรงกลาง */
+.page-content {
+  display: flex;
+  justify-content: center; /* 🧭 จัดกลางแนวนอน */
+  align-items: flex-start; /* ถ้าอยากกลางแนวตั้งด้วย ใช้ center */
+  min-height: 100vh;
+  padding-top: 100px; /* เผื่อระยะจาก navbar */
+  background: #0b0c1b;
+}
+
+.manage-container {
+  width: 95%;
+  max-width: 1300px; /* 🔥 ยาวพอดีหน้าจอ */
+  background: #fff3ff;
+  border: 8px solid #cac4d0;
+  border-radius: 18px;
+  padding: 40px 50px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 25px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #111533;
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.search-box::placeholder {
+  color: #bbb;
+}
+
+.add-code-btn {
+  width: 100%;
+  background: #5f8cff;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 25px;
+}
+
+.add-code-btn:hover {
+  background: #3d6df7;
+}
+
+.plus {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.code-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.code-table th,
+.code-table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
+}
+
+.code-table th {
+  background: #faf8f8;
+  font-weight: 700;
+  color: #333;
+}
+
+.code-table tr:last-child td {
+  border-bottom: none;
+}
+
+.edit {
+  color: #40a7db;
+  font-weight: 700;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.delete {
+  color: #e36162;
+  font-weight: 700;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.edit:hover,
+.delete:hover {
+  text-decoration: underline;
+}
+/* ✅ จัดปุ่ม Edit / Delete ให้อยู่บรรทัดเดียวกัน */
+.code-table td:last-child {
+  display: flex;
+  justify-content: center; /* จัดให้อยู่กลางในคอลัมน์ */
+  align-items: center;
+  gap: 25px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+/* เพิ่มเอฟเฟกต์ hover ให้ดูเด่นขึ้น */
+.edit:hover {
+  color: #2b8cc8;
+  text-decoration: underline;
+}
+
+.delete:hover {
+  color: #c43637;
+  text-decoration: underline;
+}

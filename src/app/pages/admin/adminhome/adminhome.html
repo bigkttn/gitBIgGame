@@ -1,1 +1,22 @@
-<p>adminhome works!</p>
+<app-admin-navbar></app-admin-navbar>
+
+<a [routerLink]="['/Adgame', uid]">
+    <div class="add-game-btn">+ Add Game</div>
+</a>
+
+<div id="gameList">
+    <div class="game-row" *ngFor="let game of games; let i = index">
+        <div class="game-info">
+            <img [src]="game.image || 'assets/images/placeholder.png'" alt="Game Thumbnail">
+            <div>
+                <div class="game-text">{{game.game_name}}</div>
+                <div class="game-text muted">Genre ID: {{game.type_id}}</div>
+            </div>
+            <div class="game-text price">{{game.price | currency:'USD':'symbol-narrow'}}</div>
+        </div>
+        <div class="game-actions">
+            <span class="edit">Edit</span>
+            <span class="delete">Delete</span>
+        </div>
+    </div>
+</div>
