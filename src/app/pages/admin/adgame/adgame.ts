@@ -1,18 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AdminNavbar } from "../admin-navbar/admin-navbar";
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/auth/auth';
+// ✅ ปรับแก้ Interface ให้ตรงกับ Backend
 export interface Game {
-  uid: string;
-  title: string;
-  type: string;
+  game_name: string;
+  type_id: number | null;
   price: number;
-  releaseDate: string;
-  imageUrl: string;
   description: string;
-  imageFile?: File; // <--- เพิ่มบรรทัดนี้เข้ามา
-
+  imageFile?: File;
+  // ไม่ต้องมี uid, releaseDate, imageUrl แล้ว เพราะ Backend จัดการให้
 }
 
 @Component({
@@ -24,59 +23,128 @@ export interface Game {
 })
 
 export class Adgame {
-
-  uid: string | null = null;
-  imagePreviewUrl: string | null = null; // *** เพิ่ม property สำหรับเก็บ URL ของภาพตัวอย่าง ***
-
-  // เปลี่ยนชื่อเป็น newGame เพื่อให้สื่อความหมายมากขึ้น
+  imagePreviewUrl: string | null = null;
   newGame: Game | null = null;
 
-  constructor(private router: Router) { }
+  // ✅ inject AuthService และ Router
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  constructor() { }
+
+  ngOnInit(): void {
+    // สร้าง object เกมใหม่ที่ว่างเปล่า
+    this.newGame = {
+      game_name: '',
+      type_id: null, // เริ่มต้นเป็น null
+      price: 0,
+      description: '',
+    };
+  }
+
   onFileSelected(event: Event): void {
     const element = event.currentTarget as HTMLInputElement;
     const fileList: FileList | null = element.files;
 
     if (fileList && fileList[0] && this.newGame) {
       const file = fileList[0];
-
-      // 1. เก็บออบเจ็กต์ไฟล์ไว้ใน newGame
       this.newGame.imageFile = file;
 
-      // 2. ใช้ FileReader เพื่ออ่านข้อมูลไฟล์และสร้างภาพ Preview
       const reader = new FileReader();
       reader.onload = () => {
-        // ผลลัพธ์จะเป็น base64 string ซึ่งใช้แสดงรูปภาพได้
         this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
   }
-  ngOnInit(): void {
-    // *** จุดที่เปลี่ยนแปลงสำคัญ ***
-    // แทนที่จะค้นหาเกมจาก uid, เราจะสร้าง object เกมใหม่ที่ว่างเปล่าขึ้นมาเลย
-    this.newGame = {
-      uid: `game-${Date.now()}`, // สร้าง uid ชั่วคราว
-      title: '',
-      type: '',
-      price: 0,
-      releaseDate: '',
-      imageUrl: '',
-      description: ''
-    };
-  }
 
-  onAddNewGame(): void {
-    if (this.newGame) {
-      // ในแอปจริง ส่วนนี้คือการส่งข้อมูล newGame ไปยัง Server/API เพื่อบันทึก
-      console.log('✅ Adding new game:', this.newGame);
-      // เมื่อบันทึกสำเร็จ อาจจะนำทางผู้ใช้กลับไปหน้ารายการเกม
-      // this.router.navigate(['/admin/games']);
+  // ✅ แก้ไขฟังก์ชัน onAddNewGame ทั้งหมด
+  async onAddNewGame(): Promise<void> {
+    if (!this.newGame || !this.newGame.game_name || this.newGame.type_id === null) {
+      alert('Please fill in all required fields (Game Title, Type).');
+      return;
+    }
+
+    // ดึงข้อมูล user ที่ login อยู่จาก localStorage
+    const userRaw = localStorage.getItem('biggame_me');
+    if (!userRaw) {
+      alert('Error: You must be logged in to add a game.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    const user = JSON.parse(userRaw);
+    const userId = user.uid;
+
+    // สร้าง FormData object
+    const formData = new FormData();
+    formData.append('game_name', this.newGame.game_name);
+    formData.append('price', this.newGame.price.toString());
+    formData.append('description', this.newGame.description);
+    formData.append('type_id', this.newGame.type_id.toString());
+    formData.append('user_id', userId);
+
+    // เพิ่มไฟล์รูปภาพถ้ามี
+    if (this.newGame.imageFile) {
+      formData.append('image', this.newGame.imageFile, this.newGame.imageFile.name);
+    }
+
+    // เรียกใช้ service เพื่อส่งข้อมูล
+    console.log('Sending data to server...');
+    const result = await this.authService.addGame(formData);
+
+    if (result.ok) {
+      alert('Game added successfully!');
+      const userRaw = localStorage.getItem('biggame_me');
+      if (userRaw) {
+        const user = JSON.parse(userRaw);
+        const userId = user.uid;
+
+        // ✅ แก้ไขวิธีส่งพารามิเตอร์ตรงนี้
+        // นำทางไป /adminhome/ ตามด้วยค่า userId
+        this.router.navigate(['/adminhome', userId]);
+
+      } else {
+        // ถ้าไม่เจอ user ให้กลับไปหน้า login หรือหน้าหลัก เพราะไม่มี uid จะไปต่อ
+        console.error("User data not found, cannot navigate to admin home.");
+        this.router.navigate(['/login']);
+      }
+    } else {
+      alert(`Error: ${result.message}`);
     }
   }
 
+  // adgame.ts
+
   onCancel(): void {
-    console.log('❌ Add new game cancelled');
-    // นำทางกลับไปหน้ารายการ
-    // this.router.navigate(['/admin/games']);
+    const userRaw = localStorage.getItem('biggame_me');
+    if (userRaw) {
+      const user = JSON.parse(userRaw);
+      const userId = user.uid;
+
+      // ✅ แก้ไขวิธีส่งพารามิเตอร์ตรงนี้
+      // นำทางไป /adminhome/ ตามด้วยค่า userId
+      this.router.navigate(['/adminhome', userId]);
+
+    } else {
+      // ถ้าไม่เจอ user ให้กลับไปหน้า login หรือหน้าหลัก เพราะไม่มี uid จะไปต่อ
+      console.error("User data not found, cannot navigate to admin home.");
+      this.router.navigate(['/login']);
+    }
+  }
+  uni(): void {
+    const userRaw = localStorage.getItem('biggame_me');
+    if (userRaw) {
+      const user = JSON.parse(userRaw);
+      const userId = user.uid;
+
+      // ✅ แก้ไขวิธีส่งพารามิเตอร์ตรงนี้
+      // นำทางไป /adminhome/ ตามด้วยค่า userId
+      this.router.navigate(['/adminhome', userId]);
+
+    } else {
+      // ถ้าไม่เจอ user ให้กลับไปหน้า login หรือหน้าหลัก เพราะไม่มี uid จะไปต่อ
+      console.error("User data not found, cannot navigate to admin home.");
+      this.router.navigate(['/login']);
+    }
   }
 }

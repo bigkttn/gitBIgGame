@@ -32,5 +32,24 @@ export class Adminhome {
     this.games = await this.authService.getGames();
     console.log('Fetched Games:', this.games);
   }
+  async onDeleteGame(gameId: number): Promise<void> {
+    // 1. Ask for confirmation before deleting
+    if (!confirm('Are you sure you want to delete this game?')) {
+      return; // Stop if the user clicks "Cancel"
+    }
+
+    // 2. Call the deleteGame function from the service
+    const result = await this.authService.deleteGame(gameId);
+
+    if (result.ok) {
+      alert(result.message); // Show success message
+      // 3. Update the UI by removing the game from the local array
+      // This avoids having to reload the entire page.
+      this.games = this.games.filter(game => game.game_id !== gameId);
+    } else {
+      // Show error message if deletion fails
+      alert(`Error: ${result.message}`);
+    }
+  }
 
 }

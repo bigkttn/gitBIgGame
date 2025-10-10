@@ -9,7 +9,14 @@ import { Getgame } from '../models/getgame';
 
 export interface LoginDto { email: string; password: string; }
 export interface RegisterDto { username: string; email: string; password: string; }
-
+export interface DeleteResponse {
+  message: string;
+  error?: string;
+}
+export interface AddGameResponse {
+  message: string;
+  game_id: number;
+}
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -130,6 +137,45 @@ export class AuthService {
       // หากเกิดข้อผิดพลาด ให้แสดง log และ return เป็น array ว่าง
       console.error('Cannot get games', err);
       return [];
+    }
+  }
+  // ✅ ADD THIS NEW FUNCTION
+  async deleteGame(gameId: string | number): Promise<{ ok: boolean; message: string }> {
+    try {
+      // Construct the URL with the ID as a query parameter
+      const url = `${environment.apiBase}/deletegame?id=${gameId}`;
+
+      // Send the DELETE request and wait for the response
+      const response = await firstValueFrom(
+        this.http.delete<DeleteResponse>(url)
+      );
+
+      return { ok: true, message: response.message || 'Game deleted successfully' };
+
+    } catch (err: any) {
+      console.error('Failed to delete game:', err);
+
+      // Extract the specific error message from the backend
+      const errorMessage = err?.error?.error || 'An unknown error occurred';
+
+      return { ok: false, message: errorMessage };
+    }
+  }
+  async addGame(formData: FormData): Promise<{ ok: boolean; message: string; game_id?: number }> {
+    try {
+      const url = `${environment.apiBase}/addGame`;
+
+      // ส่ง POST request พร้อมกับ FormData
+      const response = await firstValueFrom(
+        this.http.post<AddGameResponse>(url, formData)
+      );
+
+      return { ok: true, message: response.message, game_id: response.game_id };
+
+    } catch (err: any) {
+      console.error('Failed to add game:', err);
+      const errorMessage = err?.error?.error || 'An unknown error occurred while adding the game.';
+      return { ok: false, message: errorMessage };
     }
   }
 }
