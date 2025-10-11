@@ -2,7 +2,7 @@
     <div class="navbar-left">
         <a [routerLink]="['/adminhome', me?.uid]" class="nav-item">Game</a>
         <a [routerLink]="['/Admincode', me?.uid]" class="nav-item">Code</a>
-        <a class="nav-item" routerLink="/admin/history">User history</a>
+        <a [routerLink]="['/userhistory', me?.uid]" class="nav-item" routerLink="/admin/history">User history</a>
     </div>
 
     <div class="navbar-right">

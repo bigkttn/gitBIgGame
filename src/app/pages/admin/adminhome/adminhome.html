@@ -15,8 +15,8 @@
             <div class="game-text price">{{game.price | currency:'USD':'symbol-narrow'}}</div>
         </div>
         <div class="game-actions">
-            <span class="edit">Edit</span>
-            <span class="delete" (click)="onDeleteGame(game.game_id)">Delete</span>
+            <span class="edit" [routerLink]="['/editgame', game.game_id]">Edit</span> <span class="delete"
+                (click)="onDeleteGame(game.game_id)">Delete</span>
         </div>
     </div>
 </div>

@@ -1,135 +1,211 @@
+// --- Variables ---
+$primary-color: #007bff;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$light-gray: #f8f9fa;
+$border-color: #dee2e6;
+$card-background: #ffffff;
+$box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+$navbar-height: 70px; // <-- ❗ ปรับความสูงของ Navbar ของคุณที่นี่
 
-/* ครอบทุกอย่างไว้ตรงกลาง */
-.page-content {
+// --- Main Page Layout ---
+.page-container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: $light-gray;
   display: flex;
-  justify-content: center; /* 🧭 จัดกลางแนวนอน */
-  align-items: flex-start; /* ถ้าอยากกลางแนวตั้งด้วย ใช้ center */
-  min-height: 100vh;
-  padding-top: 100px; /* เผื่อระยะจาก navbar */
-  background: #0b0c1b;
+  gap: 2rem;
+  align-items: flex-start;
+  box-sizing: border-box;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    max-width: none;
+  }
 }
 
-.manage-container {
-  width: 95%;
-  max-width: 1300px; /* 🔥 ยาวพอดีหน้าจอ */
-  background: #fff3ff;
-  border: 8px solid #cac4d0;
-  border-radius: 18px;
-  padding: 40px 50px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-}
-
-.title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: 25px;
-}
-
-.search-box {
+// --- Card Styling ---
+.card {
+  padding: 2rem;
+  background: $card-background;
+  border-radius: 16px;
+  box-shadow: $box-shadow;
   width: 100%;
-  padding: 14px 20px;
-  border: none;
-  border-radius: 12px;
-  background: #111533;
-  color: #fff;
-  font-size: 15px;
-  margin-bottom: 20px;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+}
+.form-card {
+  flex: 0 0 450px;
+  position: sticky;
+  top: 2rem;
+}
+.table-card {
+  flex: 1;
+}
+.table-container {
+  overflow-x: auto;
 }
 
-.search-box::placeholder {
-  color: #bbb;
+// --- Form Styling ---
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  align-items: end; // จัดให้ element ใน grid อยู่ด้านล่าง
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  input,
+  select {
+    padding: 0.75rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+  }
 }
 
-.add-code-btn {
-  width: 100%;
-  background: #5f8cff;
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  border: none;
-  border-radius: 12px;
-  padding: 14px;
+// --- Toggle Switch Styling ---
+.toggle-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 0.75rem;
+  height: 45px; // กำหนดความสูงให้เท่ากับ input field อื่นๆ
+}
+
+.toggle-checkbox {
+  // ซ่อน checkbox เดิม
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-label {
+  position: relative;
+  display: block;
+  width: 50px; // ความกว้างของรางสวิตช์
+  height: 28px; // ความสูงของรางสวิตช์
+  background-color: #ccc;
+  border-radius: 14px;
   cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 25px;
+  transition: background-color 0.3s ease;
+
+  // ตัวจับ (วงกลม) ของสวิตช์
+  &::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s ease;
+  }
 }
 
-.add-code-btn:hover {
-  background: #3d6df7;
+// เมื่อ checkbox ถูกติ๊ก (checked)
+.toggle-checkbox:checked + .toggle-label {
+  background-color: $success-color; // เปลี่ยนสีรางเป็นสีเขียว
+
+  // เลื่อนตัวจับไปทางขวา
+  &::after {
+    transform: translateX(22px);
+  }
 }
 
-.plus {
-  font-size: 18px;
-  font-weight: 700;
+.toggle-status-text {
+  font-weight: 600;
+  color: #6c757d;
 }
 
-.code-table {
+// --- Button, Table, and other styles ---
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+.btn-save,
+.btn-cancel {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-save {
+  background-color: $primary-color;
+  color: white;
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+}
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  th,
+  td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  thead th {
+    font-weight: 700;
+    background: $card-background;
+  }
+  tbody tr:hover {
+    background-color: $light-gray;
+  }
 }
-
-.code-table th,
-.code-table td {
-  padding: 16px 18px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-  font-size: 15px;
-}
-
-.code-table th {
-  background: #faf8f8;
-  font-weight: 700;
-  color: #333;
-}
-
-.code-table tr:last-child td {
-  border-bottom: none;
-}
-
-.edit {
-  color: #40a7db;
-  font-weight: 700;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.delete {
-  color: #e36162;
-  font-weight: 700;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.edit:hover,
-.delete:hover {
-  text-decoration: underline;
-}
-/* ✅ จัดปุ่ม Edit / Delete ให้อยู่บรรทัดเดียวกัน */
-.code-table td:last-child {
+td.actions {
   display: flex;
-  justify-content: center; /* จัดให้อยู่กลางในคอลัมน์ */
-  align-items: center;
-  gap: 25px; /* ระยะห่างระหว่างปุ่ม */
+  gap: 0.5rem;
 }
-
-/* เพิ่มเอฟเฟกต์ hover ให้ดูเด่นขึ้น */
-.edit:hover {
-  color: #2b8cc8;
-  text-decoration: underline;
+.btn-action {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  &.btn-edit {
+    background-color: #ffc107;
+  }
+  &.btn-delete {
+    background-color: #dc3545;
+  }
 }
-
-.delete:hover {
-  color: #c43637;
-  text-decoration: underline;
+.status {
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #fff;
+  &.active {
+    background-color: $success-color;
+  }
+  &.inactive {
+    background-color: $danger-color;
+  }
+}
+.loading-spinner,
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
 }

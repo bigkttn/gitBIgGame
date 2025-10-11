@@ -17,6 +17,88 @@ export interface AddGameResponse {
   message: string;
   game_id: number;
 }
+export interface Game {
+  game_id: number;
+  game_name: string;
+  price: number;
+  image?: string;
+  description?: string;
+  release_date?: string;
+  sold?: number;
+  type_id?: number;
+  user_id?: number;
+}
+
+export interface UpdateGameResponse {
+  message: string;
+  game_id: number;
+}
+export interface TypeGame {
+  type_id: number;
+  type_name: string;
+}
+export interface User {
+  uid: string;
+  full_name: string;
+  email: string;
+  role: string;
+  imageUser: string;
+}
+export interface Wallet {
+  wid: number;
+  cash: number;
+  user_id: number;
+}
+export interface WalletHistory {
+  hid: number;
+  date: string;
+  amount: number;
+  wid: number;
+}
+export interface DiscountCode {
+  code_id: number;
+  code: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  expiry_date: string | null;
+  usage_limit: number;
+  times_used: number;
+  is_active: boolean;
+}
+export interface AddDiscountCodeDto {
+  code: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  expiry_date?: string | null;
+  usage_limit: number;
+  is_active: boolean;
+}
+
+export interface DiscountCode {
+  code_id: number;
+  code: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  expiry_date: string | null;
+  usage_limit: number;
+  times_used: number;
+  is_active: boolean;
+}
+
+export interface AddDiscountCodeDto {
+  code: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  expiry_date?: string | null;
+  usage_limit: number;
+  is_active: boolean;
+}
+export interface PurchaseHistoryItem {
+  game_name: string;
+  price: number;
+  image?: string;
+  date: string;
+}
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -176,6 +258,99 @@ export class AuthService {
       console.error('Failed to add game:', err);
       const errorMessage = err?.error?.error || 'An unknown error occurred while adding the game.';
       return { ok: false, message: errorMessage };
+    }
+  }
+
+  async getGameById(id: string | number): Promise<Game> {
+    try {
+      const url = `${environment.apiBase}/game?id=${id}`;
+      const game = await firstValueFrom(this.http.get<Game>(url));
+      return game;
+    } catch (err: any) {
+      console.error(`Failed to get game with id ${id}:`, err);
+      // โยน error ออกไปเพื่อให้ component จัดการต่อ
+      throw new Error(err?.error?.error || 'Could not fetch game data.');
+    }
+  }
+
+  // ✅ 2. เพิ่มฟังก์ชันสำหรับอัปเดตข้อมูลเกม
+  async updateGame(formData: FormData): Promise<{ ok: boolean; message: string }> {
+    try {
+      const url = `${environment.apiBase}/editgame`;
+      // ใช้ PUT method ตามที่กำหนดใน Backend
+      const response = await firstValueFrom(
+        this.http.put<UpdateGameResponse>(url, formData)
+      );
+      return { ok: true, message: response.message || 'Game updated successfully' };
+    } catch (err: any) {
+      console.error('Failed to update game:', err);
+      const errorMessage = err?.error?.error || 'An unknown error occurred.';
+      return { ok: false, message: errorMessage };
+    }
+  }
+  async getGameTypes(): Promise<TypeGame[]> {
+    try {
+      const url = `${environment.apiBase}/typegames`;
+      const types = await firstValueFrom(this.http.get<TypeGame[]>(url));
+      return types || []; // ถ้าไม่มีข้อมูลให้ return array ว่าง
+    } catch (err: any) {
+      console.error('Failed to get game types:', err);
+      return []; // กรณีเกิด error ให้ return array ว่าง
+    }
+  }
+  async getAllUsers(): Promise<User[]> {
+    try {
+      const url = `${environment.apiBase}/user`;
+      const users = await firstValueFrom(this.http.get<User[]>(url));
+      return users || [];
+    } catch (err) {
+      console.error('Failed to get all users:', err);
+      return [];
+    }
+  }
+
+  async getWalletHistory(userId: string): Promise<WalletHistory[]> {
+    try {
+      const url = `${environment.apiBase}/wallet-history?user_id=${userId}`;
+      const history = await firstValueFrom(this.http.get<WalletHistory[]>(url));
+      return history || [];
+    } catch (err) {
+      console.error('Failed to get wallet history:', err);
+      return [];
+    }
+  }
+
+  async getDiscountCodes(): Promise<DiscountCode[]> {
+    const url = `${environment.apiBase}/discount-codes`;
+    return firstValueFrom(this.http.get<DiscountCode[]>(url));
+  }
+
+  // ✅ POST (Add) - แก้ไข URL
+  async addDiscountCode(dto: AddDiscountCodeDto): Promise<{ message: string }> {
+    const url = `${environment.apiBase}/discount-codes/add`; // <-- เปลี่ยน URL
+    return firstValueFrom(this.http.post<{ message: string }>(url, dto));
+  }
+
+  // ✅ PUT (Update) - แก้ไข URL
+  async updateDiscountCode(code: DiscountCode): Promise<{ message: string }> {
+    const url = `${environment.apiBase}/discount-codes/update/${code.code_id}`; // <-- เปลี่ยน URL
+    const { code_id, times_used, ...updateData } = code;
+    return firstValueFrom(this.http.put<{ message: string }>(url, updateData));
+  }
+
+  // ✅ DELETE - แก้ไข URL
+  async deleteDiscountCode(id: number): Promise<{ message: string }> {
+    const url = `${environment.apiBase}/discount-codes/delete/${id}`; // <-- เปลี่ยน URL
+    return firstValueFrom(this.http.delete<{ message: string }>(url));
+  }
+  async getPurchaseHistory(userId: string): Promise<PurchaseHistoryItem[]> {
+    try {
+      const url = `${environment.apiBase}/purchase-history?user_id=${userId}`;
+      const history = await firstValueFrom(this.http.get<PurchaseHistoryItem[]>(url));
+      return history || [];
+    } catch (err) {
+      console.error('Failed to get purchase history:', err);
+      return [];
     }
   }
 }

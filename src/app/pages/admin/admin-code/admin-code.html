@@ -1,31 +1,96 @@
 <app-admin-navbar></app-admin-navbar>
-<h2 class="title">Manage Code</h2>
-<h5>Code</h5>
-<input type="text" placeholder="Search Code..." class="input" />
-<h5>Amount</h5>
-<input type="number" placeholder="Search Code..." class="input" />
 
-<button class="add-code-btn">
-    <span class="plus">＋</span>
-    Add Code
-</button>
+<div class="page-container">
 
-<table class="code-table">
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Amount</th>
-            <th style="padding-left: 440px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>BIGGAMEVERYGOODSOMUCHEIEI</td>
-            <td>60</td>
-            <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <div class="card form-card">
+        <h2>{{ isEditMode ? 'Edit Discount Code' : 'Add New Discount Code' }}</h2>
+        <form #codeForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+                <!-- ... form groups for Code, Type, Value, Limit, Expiry Date ... -->
+                <div class="form-group">
+                    <label for="code">Code</label>
+                    <input type="text" id="code" name="code" [(ngModel)]="newCode.code" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Discount Type</label>
+                    <select id="type" name="type" [(ngModel)]="newCode.discount_type">
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="fixed">Fixed Amount ($)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="value">Value</label>
+                    <input type="number" id="value" name="value" [(ngModel)]="newCode.discount_value" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="limit">Usage Limit</label>
+                    <input type="number" id="limit" name="limit" [(ngModel)]="newCode.usage_limit" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="expiry">Expiry Date (Optional)</label>
+                    <input type="datetime-local" id="expiry" name="expiry" [(ngModel)]="newCode.expiry_date">
+                </div>
+
+                <!-- ✅ ส่วนของ Checkbox ที่แก้ไขใหม่ทั้งหมด -->
+                <div class="form-group">
+                    <label>Status</label>
+                    <div class="toggle-container">
+                        <input type="checkbox" id="active" name="active" class="toggle-checkbox"
+                            [(ngModel)]="newCode.is_active">
+                        <label class="toggle-label" for="active"></label>
+                        <span class="toggle-status-text">{{ newCode.is_active ? 'Active' : 'Inactive' }}</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="button-group">
+                <button *ngIf="isEditMode" type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+                <button type="submit" class="btn btn-save" [disabled]="!codeForm.form.valid">
+                    {{ isEditMode ? 'Save Changes' : 'Add Code' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ... The table-card remains the same ... -->
+    <div class="card table-card">
+        <h2>Existing Discount Codes</h2>
+        <div *ngIf="isLoading" class="loading-spinner">Loading codes...</div>
+        <div *ngIf="!isLoading" class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Usage</th>
+                        <th>Expires</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let code of codes">
+                        <td><strong>{{ code.code }}</strong></td>
+                        <td>{{ code.discount_type }}</td>
+                        <td>{{ code.discount_type === 'percentage' ? (code.discount_value | number:'1.0-0') + '%' :
+                            (code.discount_value | currency:'$') }}</td>
+                        <td>{{ code.times_used }} / {{ code.usage_limit }}</td>
+                        <td>{{ code.expiry_date ? (code.expiry_date | date:'short') : 'Never' }}</td>
+                        <td>
+                            <span class="status" [ngClass]="code.is_active ? 'active' : 'inactive'">
+                                {{ code.is_active ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-action btn-edit" (click)="onEdit(code)">Edit</button>
+                            <button class="btn-action btn-delete" (click)="onDelete(code.code_id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="codes.length === 0" class="empty-state">No discount codes found.</div>
+        </div>
+    </div>
+
+</div>

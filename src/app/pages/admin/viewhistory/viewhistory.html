@@ -1,0 +1,64 @@
+<app-admin-navbar></app-admin-navbar>
+
+<div *ngIf="isLoading" class="loading-container">
+    <p>Loading user data and history...</p>
+</div>
+<div *ngIf="errorMessage" class_alias="error-container">
+    <p>{{ errorMessage }}</p>
+</div>
+
+<div *ngIf="!isLoading && !errorMessage">
+
+    <section *ngIf="user" class="user-profile-card">
+        <div class="profile-image">
+            <img [src]="user.imageUser || 'https://via.placeholder.com/100'"
+                alt="Profile picture of {{ user.full_name }}">
+        </div>
+        <div class="profile-details">
+            <h1 class="user-name">{{ user.full_name }}</h1>
+            <p class="user-email">{{ user.email }}</p>
+            <span class="user-role">{{ user.role | titlecase }}</span>
+        </div>
+    </section>
+
+
+    <div class="history-container">
+        <section class="history-section">
+            <h2>Purchase History</h2>
+            <div *ngIf="purchaseHistory.length > 0; else noPurchases">
+                <ul>
+                    <li *ngFor="let item of purchaseHistory">
+                        <div class="item-details">
+                            <span class="game-name">{{ item.game_name }}</span>
+                            <span class="price">{{ item.price | currency:'USD' }}</span>
+                        </div>
+                        <span class="date">{{ item.date | date:'mediumDate' }}</span>
+                    </li>
+                </ul>
+            </div>
+            <ng-template #noPurchases>
+                <p>No purchase history found.</p>
+            </ng-template>
+        </section>
+
+        <section class="history-section">
+            <h2>Wallet History</h2>
+            <div *ngIf="walletHistory.length > 0; else noWalletHistory">
+                <ul>
+                    <li *ngFor="let item of walletHistory">
+                        <div class="item-details">
+                            <span class="amount" [ngClass]="{'positive': item.amount > 0, 'negative': item.amount < 0}">
+                                {{ item.amount | currency:'USD' }}
+                            </span>
+                        </div>
+                        <span class="date">{{ item.date | date:'mediumDate' }}</span>
+                    </li>
+                </ul>
+            </div>
+            <ng-template #noWalletHistory>
+                <p>No wallet history found.</p>
+            </ng-template>
+        </section>
+    </div>
+
+</div>

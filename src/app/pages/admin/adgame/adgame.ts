@@ -131,20 +131,6 @@ export class Adgame {
       this.router.navigate(['/login']);
     }
   }
-  uni(): void {
-    const userRaw = localStorage.getItem('biggame_me');
-    if (userRaw) {
-      const user = JSON.parse(userRaw);
-      const userId = user.uid;
 
-      // ✅ แก้ไขวิธีส่งพารามิเตอร์ตรงนี้
-      // นำทางไป /adminhome/ ตามด้วยค่า userId
-      this.router.navigate(['/adminhome', userId]);
 
-    } else {
-      // ถ้าไม่เจอ user ให้กลับไปหน้า login หรือหน้าหลัก เพราะไม่มี uid จะไปต่อ
-      console.error("User data not found, cannot navigate to admin home.");
-      this.router.navigate(['/login']);
-    }
-  }
 }

@@ -8,6 +8,9 @@ import { Profile } from './pages/user/profile/profile';
 import { EditProfile } from './pages/user/edit-profile/edit-profile';
 import { AdminCode } from './pages/admin/admin-code/admin-code';
 import { Adgame } from './pages/admin/adgame/adgame';
+import { Editgame } from './pages/admin/editgame/editgame';
+import { Userhistory } from './pages/admin/userhistory/userhistory';
+import { Viewhistory } from './pages/admin/viewhistory/viewhistory';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,6 +21,9 @@ export const routes: Routes = [
   { path: 'adminhome/:uid', component: Adminhome, canActivate: [authGuard] },
   { path: 'Admincode/:uid', component: AdminCode, canActivate: [authGuard] },
   { path: 'Adgame/:uid', component: Adgame, canActivate: [authGuard] },
+  { path: 'editgame/:uid', component: Editgame, canActivate: [authGuard] },
+  { path: 'userhistory/:uid', component: Userhistory, canActivate: [authGuard] },
+  { path: 'viewhistory/:uid', component: Viewhistory, canActivate: [authGuard] },
 
   { path: 'userhome/:uid', component: Userhome, canActivate: [authGuard] },
   { path: 'profile/:uid', component: Profile, canActivate: [authGuard] },
